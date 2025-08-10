@@ -11,6 +11,7 @@ import { formatCurrency } from './utils';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
+// 获取收入
 export async function fetchRevenue() {
   try {
     // Artificially delay a response for demo purposes.
@@ -30,6 +31,7 @@ export async function fetchRevenue() {
   }
 }
 
+// 获取最新发票
 export async function fetchLatestInvoices() {
   try {
     const data = await sql<LatestInvoiceRaw[]>`
@@ -38,6 +40,7 @@ export async function fetchLatestInvoices() {
       JOIN customers ON invoices.customer_id = customers.id
       ORDER BY invoices.date DESC
       LIMIT 5`;
+      console.log("最新发票 data: ", data);
 
     const latestInvoices = data.map((invoice) => ({
       ...invoice,
@@ -50,6 +53,7 @@ export async function fetchLatestInvoices() {
   }
 }
 
+// 获取卡片数据
 export async function fetchCardData() {
   try {
     // You can probably combine these into a single SQL query
@@ -85,6 +89,7 @@ export async function fetchCardData() {
   }
 }
 
+// 提取过滤发票
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
   query: string,
